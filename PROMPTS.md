@@ -42,3 +42,76 @@ A clean backend folder structure and FastAPI application entry point.
 
 ### Engineering Reason
 A modular backend makes the project scalable and easier to maintain.
+
+## Prompt 3
+
+### Goal
+
+Setup the frontend application for the AI Interview Agent.
+
+### Context
+
+The project requires a modern frontend interface for candidate interaction, interview flow, and feedback visualization.
+
+### Prompt
+
+You are a Senior Frontend Engineer.
+
+Create a production-ready React frontend using Vite, TypeScript, and a scalable folder structure. Configure the project for future integration with FastAPI backend APIs.
+
+### Expected Output
+
+A working React + TypeScript + Vite frontend application.
+
+### Engineering Reason
+
+A modern frontend architecture improves maintainability, scalability, and developer experience.
+
+
+## Prompt 4
+
+### Goal
+
+Configure Tailwind CSS for frontend styling.
+
+### Context
+
+The AI Interview Agent requires a responsive and professional user interface.
+
+### Prompt
+
+You are a Senior Frontend Engineer.
+
+Setup Tailwind CSS in a Vite React TypeScript project and configure it for reusable component-based UI development.
+
+### Expected Output
+
+A working Tailwind CSS configuration with utility-based styling support.
+
+### Engineering Reason
+
+Tailwind CSS enables rapid development of consistent, responsive, and maintainable user interfaces.
+
+## Prompt 5
+
+### Goal
+
+Setup shadcn/ui component library for the AI Interview Agent frontend.
+
+### Context
+
+The project requires reusable, accessible, and production-ready UI components for building the interview interface.
+
+### Prompt
+
+You are a Senior Frontend Engineer.
+
+Configure shadcn/ui in a React + TypeScript + Vite project with Tailwind CSS. Add reusable UI components required for future pages and interactions.
+
+### Expected Output
+
+A configured shadcn/ui system with reusable components like Button, Card, and Input.
+
+### Engineering Reason
+
+Reusable component libraries improve UI consistency, accessibility, and development speed.
