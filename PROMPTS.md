@@ -169,3 +169,55 @@ backend/
     │
     └── services/
         └── candidate_service.py
+
+## Prompt 8 — Curriculum JSON Loader
+
+### Goal
+
+Create a structured curriculum system that loads interview modules and topics from JSON, validates the data using Pydantic, and exposes it through a FastAPI endpoint.
+
+### Context
+
+The AI Interview Agent needs a structured curriculum so that the Interview Engine can later generate questions based on different modules and topics.
+
+### Prompt
+
+You are a Senior Backend Engineer.
+
+Design and implement a modular curriculum loader using JSON, Pydantic, FastAPI, and a service layer.
+
+The system should load curriculum data from a JSON file, validate it using Pydantic models, and expose it through a REST API.
+
+### Requirements
+
+- Create `curriculum.json`.
+- Create a Pydantic `Curriculum` model.
+- Create a Pydantic `Module` model.
+- Create a `CurriculumService`.
+- Create a FastAPI Curriculum API route.
+- Register the Curriculum router in `main.py`.
+- Validate curriculum data using Pydantic.
+- Expose curriculum data through a REST API.
+
+### Implementation
+
+Created:
+
+```text
+backend/
+├── data/
+│   ├── candidate.json
+│   └── curriculum.json
+│
+└── app/
+    ├── api/
+    │   ├── candidate.py
+    │   └── curriculum.py
+    │
+    ├── models/
+    │   ├── candidate.py
+    │   └── curriculum.py
+    │
+    └── services/
+        ├── candidate_service.py
+        └── curriculum_service.py

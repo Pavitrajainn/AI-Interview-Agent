@@ -1,0 +1,48 @@
+{
+  "course": "Software Engineering Interview",
+  "modules": [
+    {
+      "id": "python",
+      "name": "Python",
+      "topics": [
+        "Python Basics",
+        "Data Types",
+        "Functions",
+        "Object Oriented Programming",
+        "Exception Handling"
+      ]
+    },
+    {
+      "id": "javascript",
+      "name": "JavaScript",
+      "topics": [
+        "Variables",
+        "Functions",
+        "Arrays",
+        "Objects",
+        "Async JavaScript"
+      ]
+    },
+    {
+      "id": "react",
+      "name": "React",
+      "topics": [
+        "Components",
+        "Props",
+        "State",
+        "Hooks",
+        "API Integration"
+      ]
+    },
+    {
+      "id": "fastapi",
+      "name": "FastAPI",
+      "topics": [
+        "Routes",
+        "Pydantic",
+        "Dependency Injection",
+        "REST APIs"
+      ]
+    }
+  ]
+}

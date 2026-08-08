@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from app.api.candidate import router as candidate_router
+from app.api.curriculum import router as curriculum_router
 
 app = FastAPI(
     title="AI Interview Agent API",
@@ -24,3 +25,4 @@ def health():
     
     
 app.include_router(candidate_router)
+app.include_router(curriculum_router)
