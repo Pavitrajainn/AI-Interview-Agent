@@ -133,3 +133,39 @@ Create a professional and responsive landing page for the AI Interview Agent.
 - Added AI Interview Agent branding
 - Added feature cards
 - Added Start Interview CTA
+
+## Prompt 7 — Candidate Profile Loader
+
+### Goal
+
+Create a structured candidate profile system that loads candidate information from JSON, validates it using Pydantic, and exposes it through a FastAPI endpoint.
+
+### Requirements
+
+- Create a structured candidate JSON file.
+- Create a Pydantic Candidate model.
+- Create an Education model for candidate education details.
+- Create a Candidate Service to load candidate data.
+- Create a FastAPI Candidate API route.
+- Register the Candidate API router in the main FastAPI application.
+- Validate candidate data using Pydantic.
+- Expose candidate information through a REST API.
+
+### Implementation
+
+Created:
+
+```text
+backend/
+├── data/
+│   └── candidate.json
+│
+└── app/
+    ├── api/
+    │   └── candidate.py
+    │
+    ├── models/
+    │   └── candidate.py
+    │
+    └── services/
+        └── candidate_service.py
