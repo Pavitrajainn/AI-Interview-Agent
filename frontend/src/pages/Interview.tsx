@@ -6,20 +6,21 @@ interface InterviewProps {
   candidateId: string;
   firstQuestion: InterviewQuestion;
   totalQuestions: number;
+  onComplete: () => void;
 }
 
 export default function Interview({
   candidateId,
   firstQuestion,
   totalQuestions,
+  onComplete,
 }: InterviewProps) {
   const [currentQuestion, setCurrentQuestion] =
-    useState<InterviewQuestion>(firstQuestion);
+    useState(firstQuestion);
 
   const [questionNumber, setQuestionNumber] = useState(1);
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
-  const [completed, setCompleted] = useState(false);
 
   const handleSubmitAnswer = async () => {
     if (!answer.trim()) {
@@ -37,7 +38,7 @@ export default function Interview({
       });
 
       if (response.completed) {
-        setCompleted(true);
+        onComplete();
         return;
       }
 
@@ -48,31 +49,18 @@ export default function Interview({
       }
     } catch (error) {
       console.error("Failed to submit answer:", error);
-      alert("Unable to submit answer. Check if backend is running.");
+
+      alert(
+        "Unable to submit answer. Check if backend is running."
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  if (completed) {
-    return (
-      <main className="min-h-screen bg-gray-50 p-8">
-        <div className="mx-auto max-w-3xl rounded-xl bg-white p-8 text-center shadow">
-          <h1 className="text-3xl font-bold">
-            Interview Completed!
-          </h1>
-
-          <p className="mt-4 text-gray-600">
-            You completed all {totalQuestions} questions.
-          </p>
-        </div>
-      </main>
-    );
-  }
-
   return (
-    <main className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-3xl">
+    <main className="min-h-screen bg-gray-50 px-6 py-10">
+      <div className="mx-auto max-w-4xl">
 
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-2xl font-bold">
@@ -102,7 +90,9 @@ export default function Interview({
 
           <textarea
             value={answer}
-            onChange={(event) => setAnswer(event.target.value)}
+            onChange={(event) =>
+              setAnswer(event.target.value)
+            }
             placeholder="Type your answer here..."
             rows={8}
             disabled={loading}
@@ -114,7 +104,9 @@ export default function Interview({
             disabled={loading || !answer.trim()}
             className="mt-6 rounded-md bg-black px-6 py-3 text-white disabled:opacity-50"
           >
-            {loading ? "Submitting..." : "Submit Answer →"}
+            {loading
+              ? "Submitting..."
+              : "Submit Answer →"}
           </button>
 
         </div>

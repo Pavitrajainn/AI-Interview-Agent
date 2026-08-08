@@ -161,3 +161,30 @@ export const getInterviewMemory = async (
 
   return response.data;
 };
+
+// ====================
+// Feedback API
+// ====================
+
+export interface FeedbackResponse {
+  candidate_id: string;
+  overall_score: number;
+  technical_score: number;
+  communication_score: number;
+  strengths: string[];
+  weaknesses: string[];
+  recommendations: string[];
+}
+
+export const generateFeedback = async (
+  candidateId: string
+): Promise<FeedbackResponse> => {
+  const response = await apiClient.post<FeedbackResponse>(
+    "/api/feedback/generate",
+    {
+      candidate_id: candidateId,
+    }
+  );
+
+  return response.data;
+};
