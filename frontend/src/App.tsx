@@ -1,11 +1,7 @@
+import Landing from "./pages/Landing";
+
 function App() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950">
-      <h1 className="text-5xl font-bold text-cyan-400">
-        AI Interview Agent 🚀
-      </h1>
-    </div>
-  );
+  return <Landing />;
 }
 
 export default App;
