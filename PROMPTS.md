@@ -450,3 +450,173 @@ A dedicated feedback service separates evaluation logic from the interview engin
 
 ```
 ```
+## Prompt 13 — Backend API Integration
+
+### Goal
+
+Integrate all backend modules into a unified FastAPI application and ensure that the complete interview workflow is accessible through REST APIs.
+
+### Requirements
+
+* Register all API routers in the FastAPI application.
+* Integrate Candidate API.
+* Integrate Curriculum API.
+* Integrate Interview API.
+* Integrate Follow-up API.
+* Integrate Feedback API.
+* Configure a central FastAPI application entry point.
+* Verify API availability through Swagger/OpenAPI.
+* Verify the interview workflow from session creation to feedback generation.
+* Handle API errors using appropriate HTTP status codes.
+
+### Implementation
+
+The FastAPI application is configured as the central backend entry point:
+
+```text
+backend/
+└── app/
+    ├── main.py
+    │
+    ├── api/
+    │   ├── candidate.py
+    │   ├── curriculum.py
+    │   ├── interview.py
+    │   ├── followup.py
+    │   └── feedback.py
+    │
+    ├── models/
+    │   ├── candidate.py
+    │   ├── curriculum.py
+    │   ├── interview.py
+    │   ├── followup.py
+    │   └── feedback.py
+    │
+    ├── services/
+    │   ├── candidate_service.py
+    │   ├── curriculum_service.py
+    │   ├── interview_service.py
+    │   ├── followup_service.py
+    │   └── feedback_service.py
+    │
+    └── memory/
+        └── interview_memory.py
+```
+
+### Registered API Routers
+
+The following routers are registered in `app/main.py`:
+
+```text
+Candidate Router
+Curriculum Router
+Interview Router
+Follow-up Router
+Feedback Router
+```
+
+### Integrated API Endpoints
+
+```text
+GET  /api/candidate
+
+GET  /api/curriculum
+
+GET  /api/interview/question/{question_number}
+POST /api/interview/start
+POST /api/interview/answer
+GET  /api/interview/memory/{candidate_id}
+
+POST /api/followup/generate
+
+GET  /api/feedback/{candidate_id}
+```
+
+### API Verification
+
+The backend has been successfully started using:
+
+```bash
+python -m uvicorn app.main:app --reload
+```
+
+The FastAPI Swagger documentation is available at:
+
+```text
+/docs
+```
+
+The interview start endpoint has been successfully verified using:
+
+```text
+POST /api/interview/start
+```
+
+Example successful response:
+
+```json
+{
+  "candidate_id": "candidate_001",
+  "current_question": {
+    "id": "q1",
+    "question": "What is a Python list?",
+    "topic": "Python Basics",
+    "difficulty": "easy"
+  },
+  "question_number": 1,
+  "total_questions": 5
+}
+```
+
+### Error Handling
+
+The API uses FastAPI `HTTPException` handling for invalid requests and missing resources.
+
+Examples:
+
+```text
+404 → Resource or question not found
+422 → Invalid request data
+```
+
+### Current Architecture
+
+```text
+React Frontend
+      │
+      │ REST API
+      ▼
+FastAPI Application
+      │
+      ├── Candidate API
+      │       ↓
+      │   Candidate Service
+      │
+      ├── Curriculum API
+      │       ↓
+      │   Curriculum Service
+      │
+      ├── Interview API
+      │       ↓
+      │   Interview Service
+      │       ↓
+      │   Interview Memory
+      │
+      ├── Follow-up API
+      │       ↓
+      │   Follow-up Service
+      │
+      └── Feedback API
+              ↓
+          Feedback Service
+```
+
+### Engineering Reason
+
+Centralizing the backend APIs through FastAPI provides a clean contract between the frontend and backend.
+
+A modular router and service architecture keeps business logic separated from HTTP concerns and makes the system easier to test, maintain, and extend.
+
+The current backend provides the foundation required for frontend integration and future AI/LLM integration.
+
+
