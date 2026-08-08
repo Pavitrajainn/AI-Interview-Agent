@@ -9,6 +9,7 @@ from app.models.interview import (
 
 from app.services.interview_service import InterviewService
 
+
 router = APIRouter(
     prefix="/api/interview",
     tags=["Interview"],
@@ -39,6 +40,7 @@ def get_interview_question(question_number: int):
 def start_interview(candidate_id: str):
     return interview_service.start_interview(candidate_id)
 
+
 @router.post(
     "/answer",
     response_model=AnswerResponse
@@ -55,7 +57,24 @@ def submit_answer(submission: AnswerSubmission):
             status_code=404,
             detail="Question not found"
         )
-        
+
+
 @router.get("/memory/{candidate_id}")
 def get_interview_memory(candidate_id: str):
     return interview_service.get_interview_memory(candidate_id)
+
+
+# Prompt 16 - AI Question Generation
+@router.get("/ai-question")
+def generate_ai_question():
+    question = interview_service.generate_ai_question(
+        topic="Python Basics",
+        difficulty="easy",
+        role="Python Developer",
+        experience_level="Beginner",
+        skills="Python"
+    )
+
+    return {
+        "question": question
+    }

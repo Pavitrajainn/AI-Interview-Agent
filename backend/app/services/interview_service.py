@@ -1,5 +1,6 @@
 from app.models.interview import InterviewQuestion, InterviewSession
 from app.memory.interview_memory import interview_memory
+from app.ai.client import AIClient, MockAIClient
 
 
 class InterviewService:
@@ -8,6 +9,9 @@ class InterviewService:
 
         # Use the single shared interview memory
         self.memory = interview_memory
+
+        # Use mock AI client for now
+        self.ai_client: AIClient = MockAIClient()
 
         self.questions = [
             InterviewQuestion(
@@ -54,12 +58,53 @@ class InterviewService:
     def get_total_questions(self) -> int:
         return len(self.questions)
 
+    def generate_ai_question(
+        self,
+        topic: str,
+        difficulty: str,
+        role: str = "Python Developer",
+        experience_level: str = "Beginner",
+        skills: str = "Python"
+    ) -> str:
+        """
+        Generate an interview question using the configured AI client.
+        """
+
+        from app.ai.prompts import INTERVIEW_QUESTION_PROMPT
+
+        prompt = INTERVIEW_QUESTION_PROMPT.format(
+            role=role,
+            experience_level=experience_level,
+            skills=skills,
+            topic=topic,
+            difficulty=difficulty
+        )
+
+        return self.ai_client.generate(prompt)
+
     def start_interview(self, candidate_id: str) -> InterviewSession:
 
         # Clear previous interview data
         self.memory.clear_memory(candidate_id)
 
-        first_question = self.get_question(1)
+        # Generate first question using AI
+        first_question_text = self.generate_ai_question(
+            topic="Python Basics",
+            difficulty="easy",
+            role="Python Developer",
+            experience_level="Beginner",
+            skills="Python"
+        )
+
+        # Replace fixed Q1 with AI-generated Q1
+        self.questions[0] = InterviewQuestion(
+            id="ai_q1",
+            question=first_question_text,
+            topic="Python Basics",
+            difficulty="easy"
+        )
+
+        first_question = self.questions[0]
 
         return InterviewSession(
             candidate_id=candidate_id,
