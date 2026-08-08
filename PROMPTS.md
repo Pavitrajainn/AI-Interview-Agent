@@ -619,4 +619,243 @@ A modular router and service architecture keeps business logic separated from HT
 
 The current backend provides the foundation required for frontend integration and future AI/LLM integration.
 
+## Prompt 14 — Frontend API Integration
+
+### Goal
+
+Connect the React frontend with the existing FastAPI backend to create a complete end-to-end interview experience.
+
+### Context
+
+The backend APIs and services have already been implemented and integrated into the central FastAPI application.
+
+The backend currently provides:
+
+* Candidate API
+* Curriculum API
+* Interview API
+* Conversation Memory
+* Follow-up API
+* Feedback API
+
+The frontend has already been configured using:
+
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+* shadcn/ui
+* Landing page components
+
+The next step is to connect the frontend with the existing backend APIs without changing the existing backend architecture.
+
+### Prompt
+
+You are a Senior Full-Stack Engineer.
+
+Integrate the existing React frontend with the FastAPI backend of the AI Interview Agent.
+
+Implement the complete frontend interview flow:
+
+1. Start the interview from the landing page.
+2. Send the candidate ID to the backend.
+3. Receive the first interview question.
+4. Display the current question in the frontend.
+5. Allow the candidate to enter an answer.
+6. Submit the answer to the FastAPI backend.
+7. Receive the next question from the backend.
+8. Update the interview state and progress.
+9. Continue until the interview is completed.
+10. Handle the interview completion state so that the application can proceed to final feedback/results.
+
+The frontend should maintain appropriate state for:
+
+* Candidate ID
+* Current question
+* Question number
+* Total questions
+* Candidate answer
+* Interview progress
+* Loading state
+* Error state
+* Interview completion
+
+Use the existing backend API contract and preserve the existing working backend modules.
+
+Do not rewrite the backend architecture or unnecessarily modify existing working components.
+
+### Expected Output
+
+A working React frontend connected to the FastAPI backend.
+
+The expected flow should be:
+
+```text
+Landing Page
+      ↓
+Start Interview
+      ↓
+POST /api/interview/start
+      ↓
+Question Display
+      ↓
+Candidate Answer
+      ↓
+POST /api/interview/answer
+      ↓
+Next Question
+      ↓
+Repeat
+      ↓
+Interview Completion
+```
+
+The frontend should successfully communicate with the backend and build successfully using the Vite production build command.
+
+### Implementation
+
+The frontend API integration has been implemented using the existing React/Vite/TypeScript application.
+
+The frontend now communicates with the FastAPI interview endpoints and manages the interview state required for displaying questions and submitting candidate answers.
+
+The existing landing page and backend architecture were preserved.
+
+### Build Verification
+
+The Vite production build was successfully completed.
+
+```text
+✓ 74 modules transformed
+✓ built successfully
+```
+
+A Vite `__dirname` warning was observed during the build, but it did not prevent the production build from completing successfully.
+
+### Engineering Reason
+
+The backend APIs were already functional, but the project needed a user-facing frontend that could consume those APIs and execute the interview workflow.
+
+Connecting the frontend and backend transforms the separate frontend and backend components into a functional interview application while keeping the existing modular architecture intact.
+
+This integration also provides the foundation for the next stage: the final feedback and results dashboard.
+
+# Prompt 14 — Frontend API Integration
+
+## Goal
+
+Connect the React frontend with the existing FastAPI backend to create a complete end-to-end interview experience.
+
+## Context
+
+The backend APIs and services have already been implemented and integrated into the central FastAPI application.
+
+The backend currently provides:
+
+* Candidate API
+* Curriculum API
+* Interview API
+* Conversation Memory
+* Follow-up API
+* Feedback API
+
+The frontend has already been configured using:
+
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+* shadcn/ui
+* Landing page components
+
+The next step is to connect the frontend with the existing backend APIs without changing the existing backend architecture.
+
+## Prompt
+
+You are a Senior Full-Stack Engineer.
+
+Integrate the existing React frontend with the FastAPI backend of the AI Interview Agent.
+
+Implement the complete frontend interview flow:
+
+1. Start the interview from the landing page.
+2. Send the candidate ID to the backend.
+3. Receive the first interview question.
+4. Display the current question in the frontend.
+5. Allow the candidate to enter an answer.
+6. Submit the answer to the FastAPI backend.
+7. Receive the next question from the backend.
+8. Update the interview state and progress.
+9. Continue until the interview is completed.
+10. Handle the interview completion state so that the application can proceed to final feedback/results.
+
+The frontend should maintain appropriate state for:
+
+* Candidate ID
+* Current question
+* Question number
+* Total questions
+* Candidate answer
+* Interview progress
+* Loading state
+* Error state
+* Interview completion
+
+Use the existing backend API contract and preserve the existing working backend modules.
+
+Do not rewrite the backend architecture or unnecessarily modify existing working components.
+
+## Expected Output
+
+A working React frontend connected to the FastAPI backend.
+
+The expected flow should be:
+
+```text
+Landing Page
+      ↓
+Start Interview
+      ↓
+POST /api/interview/start
+      ↓
+Question Display
+      ↓
+Candidate Answer
+      ↓
+POST /api/interview/answer
+      ↓
+Next Question
+      ↓
+Repeat
+      ↓
+Interview Completion
+```
+
+The frontend should successfully communicate with the backend and build successfully using the Vite production build command.
+
+## Implementation
+
+The frontend API integration has been implemented using the existing React/Vite/TypeScript application.
+
+The frontend now communicates with the FastAPI interview endpoints and manages the interview state required for displaying questions and submitting candidate answers.
+
+The existing landing page and backend architecture were preserved.
+
+## Build Verification
+
+The Vite production build was successfully completed.
+
+```text
+✓ 74 modules transformed
+✓ built successfully
+```
+
+A Vite `__dirname` warning was observed during the build, but it did not prevent the production build from completing successfully.
+
+## Engineering Reason
+
+The backend APIs were already functional, but the project needed a user-facing frontend that could consume those APIs and execute the interview workflow.
+
+Connecting the frontend and backend transforms the separate frontend and backend components into a functional interview application while keeping the existing modular architecture intact.
+
+This integration also provides the foundation for the next stage: the final feedback and results dashboard.
 
