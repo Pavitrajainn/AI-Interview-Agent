@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+from app.api.candidate import router as candidate_router
+
 app = FastAPI(
     title="AI Interview Agent API",
     description="Backend API for the ABTalks AI Interview Agent",
@@ -18,3 +20,7 @@ def health():
         "status": "healthy",
         "service": "AI Interview Agent Backend"
     }
+    
+    
+    
+app.include_router(candidate_router)

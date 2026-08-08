@@ -115,3 +115,21 @@ A configured shadcn/ui system with reusable components like Button, Card, and In
 ### Engineering Reason
 
 Reusable component libraries improve UI consistency, accessibility, and development speed.
+
+## Prompt 6 — Landing Page Design
+
+### Goal
+
+Create a professional and responsive landing page for the AI Interview Agent.
+
+### Completed
+
+- Created `Navbar.tsx`
+- Created `Hero.tsx`
+- Created `Features.tsx`
+- Created `Landing.tsx`
+- Integrated landing page with `App.tsx`
+- Added responsive Tailwind styling
+- Added AI Interview Agent branding
+- Added feature cards
+- Added Start Interview CTA

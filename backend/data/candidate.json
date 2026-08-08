@@ -1,0 +1,17 @@
+{
+  "id": "candidate-001",
+  "name": "Pavitra Jain",
+  "email": "candidate@example.com",
+  "role": "Software Engineer",
+  "experience_level": "Fresher",
+  "skills": [
+    "Python",
+    "JavaScript",
+    "React",
+    "FastAPI"
+  ],
+  "education": {
+    "degree": "B.Tech Computer Science Engineering",
+    "graduation_year": 2028
+  }
+}
