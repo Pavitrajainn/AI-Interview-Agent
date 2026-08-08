@@ -739,123 +739,133 @@ Connecting the frontend and backend transforms the separate frontend and backend
 
 This integration also provides the foundation for the next stage: the final feedback and results dashboard.
 
-# Prompt 14 — Frontend API Integration
+# Prompt 15 — Final Feedback & Results Dashboard
 
 ## Goal
 
-Connect the React frontend with the existing FastAPI backend to create a complete end-to-end interview experience.
+Create a final feedback and results dashboard that displays the candidate's interview performance after completing the interview.
 
 ## Context
 
-The backend APIs and services have already been implemented and integrated into the central FastAPI application.
+The interview flow and backend feedback service are already implemented.
 
-The backend currently provides:
+The frontend now needs to display the final interview results after the candidate completes all interview questions.
 
-* Candidate API
-* Curriculum API
-* Interview API
-* Conversation Memory
-* Follow-up API
-* Feedback API
-
-The frontend has already been configured using:
-
-* React
-* TypeScript
-* Vite
-* Tailwind CSS
-* shadcn/ui
-* Landing page components
-
-The next step is to connect the frontend with the existing backend APIs without changing the existing backend architecture.
+The dashboard should consume the existing Feedback API without changing the existing backend architecture.
 
 ## Prompt
 
 You are a Senior Full-Stack Engineer.
 
-Integrate the existing React frontend with the FastAPI backend of the AI Interview Agent.
+Implement a final interview feedback and results dashboard for the AI Interview Agent.
 
-Implement the complete frontend interview flow:
+The system should:
 
-1. Start the interview from the landing page.
-2. Send the candidate ID to the backend.
-3. Receive the first interview question.
-4. Display the current question in the frontend.
-5. Allow the candidate to enter an answer.
-6. Submit the answer to the FastAPI backend.
-7. Receive the next question from the backend.
-8. Update the interview state and progress.
-9. Continue until the interview is completed.
-10. Handle the interview completion state so that the application can proceed to final feedback/results.
+1. Detect when the interview is completed.
+2. Transition from the interview screen to the results dashboard.
+3. Request the candidate's feedback from the backend.
+4. Display the overall interview score.
+5. Display the technical score.
+6. Display the communication score.
+7. Display candidate strengths.
+8. Display areas for improvement.
+9. Display learning recommendations.
+10. Handle loading and error states.
 
-The frontend should maintain appropriate state for:
-
-* Candidate ID
-* Current question
-* Question number
-* Total questions
-* Candidate answer
-* Interview progress
-* Loading state
-* Error state
-* Interview completion
-
-Use the existing backend API contract and preserve the existing working backend modules.
-
-Do not rewrite the backend architecture or unnecessarily modify existing working components.
+Preserve the existing React/Vite/TypeScript frontend architecture and FastAPI backend architecture.
 
 ## Expected Output
-
-A working React frontend connected to the FastAPI backend.
 
 The expected flow should be:
 
 ```text
-Landing Page
-      ↓
-Start Interview
-      ↓
-POST /api/interview/start
-      ↓
-Question Display
-      ↓
-Candidate Answer
-      ↓
-POST /api/interview/answer
-      ↓
-Next Question
-      ↓
-Repeat
-      ↓
-Interview Completion
+Interview
+    ↓
+Submit Final Answer
+    ↓
+Interview Completed
+    ↓
+Feedback API
+    ↓
+Results Dashboard
 ```
 
-The frontend should successfully communicate with the backend and build successfully using the Vite production build command.
+The dashboard should provide a clear summary of the candidate's interview performance.
 
 ## Implementation
 
-The frontend API integration has been implemented using the existing React/Vite/TypeScript application.
-
-The frontend now communicates with the FastAPI interview endpoints and manages the interview state required for displaying questions and submitting candidate answers.
-
-The existing landing page and backend architecture were preserved.
-
-## Build Verification
-
-The Vite production build was successfully completed.
+Created:
 
 ```text
-✓ 74 modules transformed
+frontend/
+└── src/
+    ├── App.tsx
+    ├── pages/
+    │   ├── Interview.tsx
+    │   └── Dashboard.tsx
+    └── services/
+        └── api.ts
+```
+
+### Dashboard
+
+The `Dashboard.tsx` component:
+
+* Fetches feedback using the candidate ID.
+* Displays overall score.
+* Displays technical score.
+* Displays communication score.
+* Displays strengths.
+* Displays weaknesses.
+* Displays learning recommendations.
+* Handles loading state.
+* Handles API error state.
+
+### Interview Completion
+
+The `Interview.tsx` component now supports an `onComplete` callback.
+
+When the backend returns:
+
+```json
+{
+  "completed": true
+}
+```
+
+the interview completion callback is triggered.
+
+`App.tsx` then transitions the application to the feedback dashboard.
+
+### Feedback API
+
+The frontend integrates with the backend feedback endpoint through the API service.
+
+The frontend maintains the existing API client architecture and does not modify the backend service structure.
+
+## Verification
+
+The complete frontend production build was successfully verified using:
+
+```bash
+npm run build
+```
+
+Build result:
+
+```text
+✓ 76 modules transformed
 ✓ built successfully
 ```
 
-A Vite `__dirname` warning was observed during the build, but it did not prevent the production build from completing successfully.
+A Vite `__dirname` warning was observed, but it did not prevent the production build from completing successfully.
 
 ## Engineering Reason
 
-The backend APIs were already functional, but the project needed a user-facing frontend that could consume those APIs and execute the interview workflow.
+The feedback dashboard completes the end-to-end candidate experience.
 
-Connecting the frontend and backend transforms the separate frontend and backend components into a functional interview application while keeping the existing modular architecture intact.
+Previously, the system could conduct the interview and generate backend feedback, but the candidate did not have a dedicated frontend interface for viewing the final results.
 
-This integration also provides the foundation for the next stage: the final feedback and results dashboard.
+The dashboard connects interview completion with the feedback service and provides a user-facing performance report.
 
+This also creates a foundation for future improvements such as AI-generated evaluation, per-question analysis, performance charts, and personalized recommendations.
