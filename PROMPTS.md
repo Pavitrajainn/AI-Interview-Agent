@@ -292,3 +292,161 @@ AI-based question generation will be integrated later through the LLM/API layer.
 ### Engineering Reason
 
 A separate Interview Engine makes question selection, interview sessions, answer processing, and future adaptive interview logic modular and maintainable.
+
+## Prompt 10 — Conversation Memory
+
+### Goal
+
+Maintain candidate interview answers during an active interview session.
+
+### Requirements
+
+- Create an InterviewMemory system.
+- Store candidate answers by candidate ID.
+- Store question ID and candidate answer.
+- Retrieve previously submitted answers.
+- Clear candidate interview memory when required.
+- Integrate InterviewMemory with InterviewService.
+- Expose interview memory through a FastAPI endpoint.
+
+### Implementation
+
+Created:
+
+```text
+backend/
+└── app/
+    ├── api/
+    │   └── interview.py
+    │
+    ├── memory/
+    │   └── interview_memory.py
+    │
+    └── services/
+        └── interview_service.py
+    ```
+```
+## Prompt 11 — Follow-up Question Generator
+
+### Goal
+
+Generate a relevant follow-up interview question based on the candidate's previous answer.
+
+### Requirements
+
+* Create a FollowUpRequest model.
+* Create a FollowUpResponse model.
+* Create a FollowUpService.
+* Accept candidate ID, previous question ID, and candidate answer.
+* Analyze the candidate's answer.
+* Generate a contextually relevant follow-up question.
+* Return the follow-up question through a FastAPI endpoint.
+
+### Implementation
+
+Created:
+
+```text
+backend/
+└── app/
+    ├── api/
+    │   └── followup.py
+    │
+    ├── models/
+    │   └── followup.py
+    │
+    └── services/
+        └── followup_service.py
+```
+
+### API Endpoint
+
+```text
+POST /api/followup/generate
+```
+
+### Current Implementation
+
+The current MVP uses rule-based answer analysis to select relevant follow-up questions.
+
+For example:
+
+* Answers containing `list` → list vs tuple follow-up
+* Answers containing `tuple` → tuple use-case follow-up
+* Answers containing `function` → parameters vs arguments follow-up
+* Answers containing `oop` or `object` → OOP principles follow-up
+* Answers containing `exception` → exception handling follow-up
+
+A future LLM integration can replace the rule-based logic with dynamic AI-generated follow-up questions.
+
+### Engineering Reason
+
+Follow-up questions make the interview more conversational and adaptive instead of simply presenting a fixed sequence of questions.
+
+```
+```
+## Prompt 12 — Feedback Generator
+
+### Goal
+
+Generate structured interview feedback based on the candidate's submitted answers.
+
+### Requirements
+
+* Create a FeedbackResponse model.
+* Create a FeedbackService.
+* Retrieve candidate answers from InterviewMemory.
+* Calculate technical score.
+* Calculate communication score.
+* Calculate overall score.
+* Identify candidate strengths.
+* Identify candidate weaknesses.
+* Generate improvement recommendations.
+* Return structured feedback through a FastAPI endpoint.
+
+### Implementation
+
+Created:
+
+```text
+backend/
+└── app/
+    ├── api/
+    │   └── feedback.py
+    │
+    ├── models/
+    │   └── feedback.py
+    │
+    └── services/
+        └── feedback_service.py
+```
+
+### API Endpoint
+
+```text
+GET /api/feedback/{candidate_id}
+```
+
+### Current Implementation
+
+The current MVP generates structured feedback using interview memory and basic scoring logic.
+
+The feedback contains:
+
+```text
+overall_score
+technical_score
+communication_score
+strengths
+weaknesses
+recommendations
+```
+
+If no interview answers are available, the API returns a zero-score response explaining that the interview must be completed first.
+
+### Engineering Reason
+
+A dedicated feedback service separates evaluation logic from the interview engine and provides a clear foundation for future AI-based candidate evaluation.
+
+```
+```
