@@ -1,9 +1,14 @@
 from app.models.interview import InterviewQuestion, InterviewSession
+from app.memory.interview_memory import interview_memory
 
 
 class InterviewService:
 
     def __init__(self):
+
+        # Use the single shared interview memory
+        self.memory = interview_memory
+
         self.questions = [
             InterviewQuestion(
                 id="q1",
@@ -38,6 +43,7 @@ class InterviewService:
         ]
 
     def get_question(self, question_number: int) -> InterviewQuestion:
+
         index = question_number - 1
 
         if index < 0 or index >= len(self.questions):
@@ -49,6 +55,10 @@ class InterviewService:
         return len(self.questions)
 
     def start_interview(self, candidate_id: str) -> InterviewSession:
+
+        # Clear previous interview data
+        self.memory.clear_memory(candidate_id)
+
         first_question = self.get_question(1)
 
         return InterviewSession(
@@ -64,9 +74,11 @@ class InterviewService:
         question_id: str,
         answer: str
     ):
+
         current_question_number = None
 
         for index, question in enumerate(self.questions):
+
             if question.id == question_id:
                 current_question_number = index + 1
                 break
@@ -74,9 +86,17 @@ class InterviewService:
         if current_question_number is None:
             raise ValueError("Question not found")
 
+        # Save answer in shared memory
+        self.memory.add_answer(
+            candidate_id=candidate_id,
+            question_id=question_id,
+            answer=answer
+        )
+
         next_question_number = current_question_number + 1
 
         if next_question_number > self.get_total_questions():
+
             return {
                 "candidate_id": candidate_id,
                 "question_id": question_id,
@@ -94,3 +114,7 @@ class InterviewService:
             "next_question": next_question,
             "completed": False
         }
+
+    def get_interview_memory(self, candidate_id: str):
+
+        return self.memory.get_answers(candidate_id)

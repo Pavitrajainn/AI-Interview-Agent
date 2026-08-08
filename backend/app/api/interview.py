@@ -55,3 +55,7 @@ def submit_answer(submission: AnswerSubmission):
             status_code=404,
             detail="Question not found"
         )
+        
+@router.get("/memory/{candidate_id}")
+def get_interview_memory(candidate_id: str):
+    return interview_service.get_interview_memory(candidate_id)
