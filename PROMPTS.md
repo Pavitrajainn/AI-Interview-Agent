@@ -169,6 +169,15 @@ backend/
     │
     └── services/
         └── candidate_service.py
+```
+
+### API Endpoint
+
+```text
+GET /api/candidate
+```
+
+---
 
 ## Prompt 8 — Curriculum JSON Loader
 
@@ -221,3 +230,65 @@ backend/
     └── services/
         ├── candidate_service.py
         └── curriculum_service.py
+```
+
+### API Endpoint
+
+```text
+GET /api/curriculum
+```
+
+---
+
+## Prompt 9 — Interview Engine
+
+### Goal
+
+Build the core interview engine that manages interview questions, sessions, and candidate answers.
+
+### Requirements
+
+- Create InterviewQuestion model.
+- Create InterviewSession model.
+- Create InterviewService.
+- Create mock interview questions.
+- Start an interview session for a candidate.
+- Retrieve questions by question number.
+- Accept candidate answers.
+- Return the next question.
+- Detect interview completion.
+
+### Implementation
+
+Created:
+
+```text
+backend/
+└── app/
+    ├── api/
+    │   └── interview.py
+    │
+    ├── models/
+    │   └── interview.py
+    │
+    └── services/
+        └── interview_service.py
+```
+
+### API Endpoints
+
+```text
+GET /api/interview/question/{question_number}
+POST /api/interview/start
+POST /api/interview/answer
+```
+
+### Current Implementation
+
+The Interview Engine currently uses predefined mock questions.
+
+AI-based question generation will be integrated later through the LLM/API layer.
+
+### Engineering Reason
+
+A separate Interview Engine makes question selection, interview sessions, answer processing, and future adaptive interview logic modular and maintainable.
