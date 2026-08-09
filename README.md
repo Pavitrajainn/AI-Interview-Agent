@@ -1,57 +1,60 @@
 # AI Interview Agent
 
-An intelligent AI-powered technical interviewer built for the **ABTalks AI Cohort Hackathon 2026**.
+> An adaptive AI-powered technical interview system built for the **ABTalks AI Cohort Hackathon 2026**.
 
-## Overview
+AI Interview Agent is a full-stack technical interview platform that simulates an interviewer, asks curriculum-based questions, remembers the candidate's answers, generates contextual follow-up questions, adapts interview difficulty, and produces a structured performance report.
 
-This project simulates a real technical interviewer.
-
-Instead of asking static questions, the AI:
-
-- Reads the candidate's learning journey
-- Uses the curriculum JSON
-- Conducts adaptive interviews
-- Generates intelligent follow-up questions
-- Maintains conversation context
-- Evaluates technical knowledge
-- Produces structured feedback
+The project is designed with a modular architecture so that the AI provider can be replaced or upgraded without rewriting the core interview system.
 
 ---
 
-## Features
+## 🚀 Live Demo
 
-- Adaptive Interview Flow
-- Multi-turn Conversation
-- Context Memory
-- RAG-based Question Generation
-- Personalized Interview Experience
-- Structured Technical Feedback
-- REST API
-- Modern React UI
+**Frontend:**  
+https://ai-interview-agent-ecru-five.vercel.app/
 
----
+**Backend API:**  
+https://ai-interview-agent-p18a.onrender.com/
 
-## Tech Stack
+**Backend Health Check:**  
+https://ai-interview-agent-p18a.onrender.com/health
 
-### Frontend
-
-- React
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
-
-### Backend
-
-- FastAPI
-- Python
-
-### AI
-
-- OpenAI Compatible LLM
-- ChromaDB
+**API Documentation:**  
+https://ai-interview-agent-p18a.onrender.com/docs
 
 ---
 
-## Project Status
+## 📌 Project Overview
 
-🚧 Currently under development.
+Traditional interview applications often follow a fixed list of questions.
+
+AI Interview Agent takes a different approach.
+
+The system maintains interview context and uses the candidate's previous responses to create a more personalized interview experience.
+
+### Interview flow
+
+```text
+Candidate Profile
+       ↓
+Curriculum
+       ↓
+Start Interview
+       ↓
+Generate Question
+       ↓
+Candidate Answer
+       ↓
+Analyze Performance
+       ↓
+Adjust Difficulty
+       ↓
+Generate Next Question
+       ↓
+Optional Follow-up
+       ↓
+Interview Completion
+       ↓
+AI Feedback
+       ↓
+Performance Dashboard
