@@ -1,7 +1,13 @@
 from app.models.followup import FollowUpResponse
+from app.ai.client import AIClient, MockAIClient
 
 
 class FollowUpService:
+
+    def __init__(self):
+
+        # Use the shared AI abstraction
+        self.ai_client: AIClient = MockAIClient()
 
     def generate_follow_up(
         self,
@@ -9,47 +15,21 @@ class FollowUpService:
         question_id: str,
         answer: str
     ) -> FollowUpResponse:
+        """
+        Generate a contextual follow-up question using the AI client.
+        """
 
-        answer_lower = answer.lower()
+        from app.ai.prompts import FOLLOW_UP_PROMPT
 
-        if "list" in answer_lower:
-            question = (
-                "Can you explain the difference between a Python list "
-                "and a tuple?"
-            )
+        prompt = FOLLOW_UP_PROMPT.format(
+            previous_question=question_id,
+            candidate_answer=answer
+        )
 
-        elif "tuple" in answer_lower:
-            question = (
-                "Why would you choose a tuple instead of a list "
-                "in Python?"
-            )
-
-        elif "function" in answer_lower:
-            question = (
-                "Can you explain the difference between parameters "
-                "and arguments in a Python function?"
-            )
-
-        elif "oop" in answer_lower or "object" in answer_lower:
-            question = (
-                "Can you explain the four main principles of "
-                "Object-Oriented Programming?"
-            )
-
-        elif "exception" in answer_lower:
-            question = (
-                "What is the difference between try-except and "
-                "try-finally in Python?"
-            )
-
-        else:
-            question = (
-                "Can you explain your answer with a practical "
-                "example?"
-            )
+        follow_up_question = self.ai_client.generate(prompt)
 
         return FollowUpResponse(
             candidate_id=candidate_id,
             previous_question_id=question_id,
-            follow_up_question=question
+            follow_up_question=follow_up_question
         )

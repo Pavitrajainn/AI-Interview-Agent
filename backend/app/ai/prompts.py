@@ -24,3 +24,23 @@ Requirements:
 - Do not provide the answer.
 """
 
+
+FOLLOW_UP_PROMPT = """
+You are an AI technical interviewer.
+
+Generate one contextual follow-up question based on the candidate's previous answer.
+
+Previous Question:
+{previous_question}
+
+Candidate Answer:
+{candidate_answer}
+
+Requirements:
+
+- Ask exactly one follow-up question.
+- The question must directly relate to the candidate's answer.
+- Probe the candidate's understanding deeper.
+- Keep the question clear and concise.
+- Do not provide the answer.
+"""
