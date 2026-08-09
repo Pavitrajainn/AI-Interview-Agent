@@ -1,17 +1,24 @@
 from app.models.feedback import FeedbackResponse
 from app.memory.interview_memory import interview_memory
+from app.ai.client import AIClient, MockAIClient
 
 
 class FeedbackService:
+
+    def __init__(self):
+
+        # Use the shared AI abstraction
+        self.ai_client: AIClient = MockAIClient()
 
     def generate_feedback(
         self,
         candidate_id: str
     ) -> FeedbackResponse:
 
-        # Use shared interview memory
+        # Get candidate interview answers
         answers = interview_memory.get_answers(candidate_id)
 
+        # Handle missing interview data
         if not answers:
             return FeedbackResponse(
                 candidate_id=candidate_id,
@@ -29,39 +36,30 @@ class FeedbackService:
                 ]
             )
 
-        total_answers = len(answers)
+        # Build interview context for the AI
+        interview_context = ""
 
-        # Basic MVP scoring
-        technical_score = min(100, total_answers * 20)
+        for item in answers:
+            interview_context += (
+                f"Question ID: {item['question_id']}\n"
+                f"Candidate Answer: {item['answer']}\n\n"
+            )
 
-        communication_score = 70
+        from app.ai.prompts import FEEDBACK_PROMPT
 
-        overall_score = round(
-            (technical_score + communication_score) / 2
+        prompt = FEEDBACK_PROMPT.format(
+            interview_context=interview_context
         )
 
-        strengths = [
-            "Candidate attempted the interview questions.",
-            "Candidate demonstrated knowledge of the discussed topics."
-        ]
-
-        weaknesses = [
-            "Some answers may require more depth.",
-            "Technical explanations can be improved with practical examples."
-        ]
-
-        recommendations = [
-            "Practice explaining technical concepts clearly.",
-            "Use practical examples when answering technical questions.",
-            "Review topics where answers were incomplete."
-        ]
+        # Generate structured AI feedback
+        ai_feedback = self.ai_client.generate_feedback(prompt)
 
         return FeedbackResponse(
             candidate_id=candidate_id,
-            overall_score=overall_score,
-            technical_score=technical_score,
-            communication_score=communication_score,
-            strengths=strengths,
-            weaknesses=weaknesses,
-            recommendations=recommendations
+            overall_score=ai_feedback["overall_score"],
+            technical_score=ai_feedback["technical_score"],
+            communication_score=ai_feedback["communication_score"],
+            strengths=ai_feedback["strengths"],
+            weaknesses=ai_feedback["weaknesses"],
+            recommendations=ai_feedback["recommendations"]
         )

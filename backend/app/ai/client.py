@@ -12,7 +12,14 @@ class AIClient(ABC):
     @abstractmethod
     def generate(self, prompt: str) -> str:
         """
-        Generate a response from the AI provider.
+        Generate a text response from the AI provider.
+        """
+        pass
+
+    @abstractmethod
+    def generate_feedback(self, prompt: str) -> dict:
+        """
+        Generate structured interview feedback.
         """
         pass
 
@@ -31,3 +38,28 @@ class MockAIClient(AIClient):
             "An actual LLM provider can be integrated later."
         )
 
+    def generate_feedback(self, prompt: str) -> dict:
+        """
+        Return structured mock feedback.
+
+        Later this method can be replaced with
+        a real LLM structured-output implementation.
+        """
+
+        return {
+            "overall_score": 75,
+            "technical_score": 80,
+            "communication_score": 70,
+            "strengths": [
+                "Candidate demonstrated understanding of Python concepts.",
+                "Candidate provided a technically relevant answer."
+            ],
+            "weaknesses": [
+                "Some explanations could be more detailed.",
+                "Practical examples could improve the answer."
+            ],
+            "recommendations": [
+                "Practice explaining technical concepts in depth.",
+                "Use practical examples when answering interview questions."
+            ]
+        }

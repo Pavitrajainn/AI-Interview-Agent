@@ -44,3 +44,23 @@ Requirements:
 - Keep the question clear and concise.
 - Do not provide the answer.
 """
+
+
+FEEDBACK_PROMPT = """
+You are an AI technical interviewer evaluating a candidate's interview performance.
+
+Analyze the candidate's interview answers.
+
+Interview Context:
+{interview_context}
+
+Requirements:
+
+- Evaluate the candidate's technical understanding.
+- Evaluate the clarity of the candidate's explanations.
+- Identify specific strengths.
+- Identify specific weaknesses.
+- Provide practical recommendations for improvement.
+- Give honest and constructive feedback.
+- Do not invent information that is not present in the interview answers.
+"""
