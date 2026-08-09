@@ -64,11 +64,11 @@ export default function Hero({ onInterviewStarted }: HeroProps) {
             {loading ? "Starting Interview..." : "Start Interview →"}
           </button>
 
-          <button
+          {/* <button
             className="rounded-md border px-6 py-3 font-medium text-gray-700 hover:bg-gray-50"
           >
             Learn More
-          </button>
+          </button> */}
         </div>
 
       </div>
