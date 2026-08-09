@@ -17,7 +17,13 @@ function App() {
 
   // Final feedback dashboard
   if (path === "/dashboard" || interviewCompleted) {
-    return <Dashboard candidateId="candidate_001" />;
+    return (
+      <Dashboard
+        candidateId={
+          interviewSession?.candidate_id || "candidate_001"
+        }
+      />
+    );
   }
 
   // Active interview

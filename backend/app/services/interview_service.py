@@ -1,6 +1,6 @@
 from app.models.interview import InterviewQuestion, InterviewSession
 from app.memory.interview_memory import interview_memory
-from app.ai.client import AIClient, MockAIClient
+from app.ai.llm_service import LLMService
 
 
 class InterviewService:
@@ -10,8 +10,8 @@ class InterviewService:
         # Use the single shared interview memory
         self.memory = interview_memory
 
-        # Use mock AI client for now
-        self.ai_client: AIClient = MockAIClient()
+        # Use the configured AI provider through LLMService
+        self.llm_service = LLMService()
 
         self.questions = [
             InterviewQuestion(
@@ -67,20 +67,18 @@ class InterviewService:
         skills: str = "Python"
     ) -> str:
         """
-        Generate an interview question using the configured AI client.
+        Generate an interview question using the configured AI provider.
         """
 
-        from app.ai.prompts import INTERVIEW_QUESTION_PROMPT
+        context = {
+            "role": role,
+            "experience_level": experience_level,
+            "skills": skills,
+            "topic": topic,
+            "difficulty": difficulty
+        }
 
-        prompt = INTERVIEW_QUESTION_PROMPT.format(
-            role=role,
-            experience_level=experience_level,
-            skills=skills,
-            topic=topic,
-            difficulty=difficulty
-        )
-
-        return self.ai_client.generate(prompt)
+        return self.llm_service.generate_question(context)
 
     def start_interview(self, candidate_id: str) -> InterviewSession:
 

@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { startInterview } from "../services/api";
+import type { InterviewSession } from "../services/api";
 
-export default function Hero() {
+interface HeroProps {
+  onInterviewStarted: (session: InterviewSession) => void;
+}
+
+export default function Hero({ onInterviewStarted }: HeroProps) {
   const [loading, setLoading] = useState(false);
 
   const handleStartInterview = async () => {
@@ -12,15 +17,12 @@ export default function Hero() {
 
       console.log("Interview started:", session);
 
-      alert(
-        "Interview started!\n\n" +
-          "Question " +
-          session.question_number +
-          " of " +
-          session.total_questions +
-          "\n\n" +
-          (session.current_question?.question || "No question available")
-      );
+      if (!session.current_question) {
+        alert("Interview started, but no question was received.");
+        return;
+      }
+
+      onInterviewStarted(session);
     } catch (error) {
       console.error("Failed to start interview:", error);
 
@@ -33,14 +35,14 @@ export default function Hero() {
   };
 
   return (
-    <section className="flex min-h-[80vh] items-center justify-center px-6 py-16">
-      <div className="mx-auto max-w-5xl text-center">
+    <section className="py-20">
+      <div className="mx-auto max-w-6xl px-6 text-center">
 
         <div className="mb-6 inline-block rounded-full border bg-gray-50 px-4 py-2 text-sm text-gray-600">
           🤖 AI-Powered Interview Platform
         </div>
 
-        <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-gray-900 md:text-6xl">
+        <h1 className="max-w-4xl mx-auto text-4xl font-bold tracking-tight text-gray-900 md:text-6xl">
           Practice Interviews with
           <span className="block text-gray-600">
             Your AI Interview Agent

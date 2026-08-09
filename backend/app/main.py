@@ -11,11 +11,14 @@ from app.api.feedback import router as feedback_router
 app = FastAPI(
     title="AI Interview Agent API",
     description="Backend API for the ABTalks AI Interview Agent",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 
-# CORS configuration
+# =========================
+# CORS Configuration
+# =========================
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -28,10 +31,14 @@ app.add_middleware(
 )
 
 
+# =========================
+# Basic Routes
+# =========================
+
 @app.get("/")
 def root():
     return {
-        "message": "Welcome to AI Interview Agent 🚀"
+        "message": "Welcome to AI Interview Agent ðŸš€"
     }
 
 
@@ -39,9 +46,13 @@ def root():
 def health():
     return {
         "status": "healthy",
-        "service": "AI Interview Agent Backend"
+        "service": "AI Interview Agent Backend",
     }
 
+
+# =========================
+# API Routers
+# =========================
 
 app.include_router(candidate_router)
 app.include_router(curriculum_router)

@@ -188,3 +188,30 @@ export const generateFeedback = async (
 
   return response.data;
 };
+
+// ====================
+// Follow-up API
+// ====================
+
+export interface FollowUpResponse {
+  candidate_id: string;
+  previous_question_id: string;
+  follow_up_question: string;
+}
+
+export const generateFollowUp = async (
+  candidateId: string,
+  questionId: string,
+  answer: string
+): Promise<FollowUpResponse> => {
+  const response = await apiClient.post<FollowUpResponse>(
+    "/api/followup/generate",
+    {
+      candidate_id: candidateId,
+      question_id: questionId,
+      answer: answer,
+    }
+  );
+
+  return response.data;
+};

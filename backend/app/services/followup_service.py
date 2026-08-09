@@ -1,13 +1,14 @@
 from app.models.followup import FollowUpResponse
-from app.ai.client import AIClient, MockAIClient
+from app.ai.llm_service import LLMService
 
 
 class FollowUpService:
 
     def __init__(self):
-
-        # Use the shared AI abstraction
-        self.ai_client: AIClient = MockAIClient()
+        # Use the centralized AI service.
+        # This allows MockAIProvider now and
+        # real LLM providers later.
+        self.llm_service = LLMService()
 
     def generate_follow_up(
         self,
@@ -16,17 +17,18 @@ class FollowUpService:
         answer: str
     ) -> FollowUpResponse:
         """
-        Generate a contextual follow-up question using the AI client.
+        Generate a contextual follow-up question
+        using the configured AI provider.
         """
 
-        from app.ai.prompts import FOLLOW_UP_PROMPT
+        context = {
+            "question_id": question_id,
+            "answer": answer,
+        }
 
-        prompt = FOLLOW_UP_PROMPT.format(
-            previous_question=question_id,
-            candidate_answer=answer
+        follow_up_question = self.llm_service.generate_followup(
+            context
         )
-
-        follow_up_question = self.ai_client.generate(prompt)
 
         return FollowUpResponse(
             candidate_id=candidate_id,

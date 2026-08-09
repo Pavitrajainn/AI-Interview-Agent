@@ -1074,13 +1074,13 @@ Integrate the AI Service Layer with the Feedback Service so that interview feedb
 
 The project already has:
 
-- Interview Memory
-- Feedback Service
-- Feedback API
-- AIClient abstraction
-- MockAIClient
-- AI prompt templates
-- Structured `FeedbackResponse` model
+* Interview Memory
+* Feedback Service
+* Feedback API
+* AIClient abstraction
+* MockAIClient
+* AI prompt templates
+* Structured `FeedbackResponse` model
 
 The Feedback Service previously used basic hardcoded scoring logic.
 
@@ -1090,13 +1090,13 @@ The next step is to connect the Feedback Service to the AI abstraction while kee
 
 You are a Senior AI Engineer.
 
-Integrate the existing AI Service Layer with the FeedbackService.
+Integrate the existing AI Service Layer with the `FeedbackService`.
 
 The implementation should:
 
 1. Use the existing `AIClient` abstraction.
 2. Use `MockAIClient` as the current provider.
-3. Retrieve the candidate's interview answers from InterviewMemory.
+3. Retrieve the candidate's interview answers from `InterviewMemory`.
 4. Build an interview context from the candidate's questions and answers.
 5. Use a dedicated feedback prompt template.
 6. Generate structured interview feedback through the AI client.
@@ -1122,16 +1122,17 @@ MockAIClient
 Feedback Prompt
      ↓
 Structured Feedback
+```
 
 ## Expected Output
 
 The `FeedbackService` should:
 
-- Retrieve candidate answers.
-- Construct an interview context.
-- Send the context to the AI client.
-- Receive structured feedback.
-- Map the AI response to `FeedbackResponse`.
+* Retrieve candidate answers.
+* Construct an interview context.
+* Send the context to the AI client.
+* Receive structured feedback.
+* Map the AI response to `FeedbackResponse`.
 
 The feedback should contain:
 
@@ -1142,3 +1143,501 @@ communication_score
 strengths
 weaknesses
 recommendations
+```
+
+## Engineering Reason
+
+Separating AI evaluation from the Feedback Service business logic keeps the application modular and provider-independent.
+
+The current `MockAIClient` allows the project to generate structured feedback without requiring an external API key, while the same abstraction can later support a real LLM provider.
+
+# Prompt 19 — AI Follow-up Generation
+
+## Goal
+
+Integrate the AI Service Layer with the Follow-up Service so that contextual interview follow-up questions can be generated through the reusable AI abstraction.
+
+## Context
+
+The project already has:
+
+* Interview Engine
+* Interview Memory
+* Follow-up Service
+* Follow-up API
+* AIClient abstraction
+* MockAIClient
+* Prompt templates
+* Structured `FollowUpResponse` model
+
+The next step is to connect the Follow-up Service to the AI abstraction while keeping the application functional without an external API key.
+
+## Prompt
+
+You are a Senior AI Engineer.
+
+Integrate the existing AI Service Layer with the `FollowUpService`.
+
+The implementation should:
+
+1. Use the existing `AIClient` abstraction.
+2. Use `MockAIClient` as the current provider.
+3. Accept the candidate ID, previous question ID, and candidate answer.
+4. Build a contextual follow-up prompt using the existing prompt template.
+5. Generate a relevant follow-up question through the AI client.
+6. Return the generated question using the existing `FollowUpResponse` model.
+7. Avoid requiring an external API key.
+8. Keep AI provider logic separate from business logic.
+9. Preserve the existing Follow-up API contract.
+10. Maintain compatibility with the existing React interview interface.
+
+## Expected Architecture
+
+```text
+React Interview Interface
+        ↓
+Follow-up API
+        ↓
+FollowUpService
+        ↓
+AIClient
+        ↓
+MockAIClient
+        ↓
+Follow-up Prompt
+        ↓
+Follow-up Question
+```
+
+## Implementation
+
+The Follow-up Service was integrated with the existing AI abstraction.
+
+The service now:
+
+* Uses `AIClient`.
+* Uses `MockAIClient` as the current provider.
+* Receives candidate interview context.
+* Builds the follow-up prompt.
+* Generates a contextual follow-up question.
+* Returns a structured `FollowUpResponse`.
+
+The frontend interview page also supports requesting a follow-up question through the **Ask Follow-up** action.
+
+## API Endpoint
+
+```text
+POST /api/followup/generate
+```
+
+### Request
+
+```json
+{
+  "candidate_id": "candidate_001",
+  "question_id": "ai_q1",
+  "answer": "A Python list is a mutable collection that can store multiple values."
+}
+```
+
+### Response
+
+```json
+{
+  "candidate_id": "candidate_001",
+  "previous_question_id": "ai_q1",
+  "follow_up_question": "What is the difference between a Python list and a tuple?"
+}
+```
+
+## Verification
+
+The Follow-up API was successfully verified through FastAPI Swagger/OpenAPI.
+
+The endpoint:
+
+```text
+POST /api/followup/generate
+```
+
+successfully accepts candidate answers and returns a contextual follow-up question.
+
+The complete frontend interview flow was also verified with the **Ask Follow-up** functionality.
+
+## Engineering Reason
+
+Separating follow-up generation from the interview business logic allows the application to introduce AI-generated conversational behavior without tightly coupling the Interview Engine to a specific AI provider.
+
+The current `MockAIClient` keeps the application functional without requiring an external API key, while the same abstraction can later be connected to a real LLM provider.
+
+This architecture supports future improvements such as:
+
+* Adaptive questioning
+* Deeper candidate analysis
+* Dynamic difficulty adjustment
+* Personalized interview conversations
+* Context-aware follow-up questions
+
+
+# Prompt 20 — Adaptive AI Interview & Difficulty Adjustment
+
+## Goal
+
+Make the AI Interview Agent adaptive by adjusting the next interview question based on the candidate's previous answer, performance, and current difficulty level.
+
+## Context
+
+The project already has:
+
+* Candidate Profile Loader
+* Curriculum Loader
+* Interview Engine
+* Interview Memory
+* Follow-up Service
+* Feedback Service
+* AIClient abstraction
+* MockAIClient
+* AI prompt templates
+* React interview interface
+* Final feedback dashboard
+
+The current interview flow uses five questions and the AI abstraction uses `MockAIClient`.
+
+The next step is to make the interview experience adaptive so that the system can adjust question difficulty and topic selection based on candidate performance.
+
+The implementation must continue working without an external API key.
+
+## Prompt
+
+You are a Senior AI Engineer and Adaptive Interview System Architect.
+
+Enhance the existing AI Interview Agent so that the interview dynamically adapts to the candidate's performance.
+
+The adaptive interview system should:
+
+1. Analyze the candidate's previous answer.
+2. Determine whether the answer demonstrates:
+
+   * Strong understanding
+   * Partial understanding
+   * Weak understanding
+3. Track the candidate's current performance level.
+4. Maintain a difficulty level for the interview.
+5. Adjust the next question difficulty based on candidate performance.
+6. Select the next topic from the existing curriculum.
+7. Generate the next question through the existing `AIClient` abstraction.
+8. Use `MockAIClient` as the current provider.
+9. Preserve the existing five-question interview flow.
+10. Avoid requiring an external API key.
+11. Keep adaptive logic separate from the AI provider implementation.
+12. Preserve existing API contracts wherever possible.
+13. Maintain compatibility with the existing React frontend.
+
+## Adaptive Difficulty Rules
+
+Use the following MVP rules:
+
+```text
+Strong Answer
+      ↓
+Increase difficulty
+
+Partial Answer
+      ↓
+Keep current difficulty
+
+Weak Answer
+      ↓
+Decrease difficulty
+```
+
+Difficulty levels:
+
+```text
+easy
+medium
+hard
+```
+
+The difficulty must never go below `easy` or above `hard`.
+
+## Performance Classification
+
+The system can initially use rule-based analysis through the existing AI abstraction.
+
+Example:
+
+```text
+Strong:
+- Answer is sufficiently detailed.
+- Contains relevant technical concepts.
+- Provides an accurate explanation or example.
+
+Partial:
+- Answer demonstrates some understanding.
+- Explanation is incomplete.
+- Missing important technical details.
+
+Weak:
+- Answer is very short or unclear.
+- Contains incorrect concepts.
+- Does not address the question.
+```
+
+The implementation should remain modular so that this rule-based classification can later be replaced by an LLM-based evaluator.
+
+## Adaptive Interview Flow
+
+```text
+Start Interview
+      ↓
+Question 1
+      ↓
+Candidate Answer
+      ↓
+Analyze Answer
+      ↓
+Determine Performance
+      ↓
+Adjust Difficulty
+      ↓
+Select Next Topic
+      ↓
+Generate Next Question
+      ↓
+Candidate Answer
+      ↓
+Repeat
+      ↓
+Question 5
+      ↓
+Final Feedback
+```
+
+## Expected Architecture
+
+```text
+React Interview Interface
+          ↓
+Interview API
+          ↓
+InterviewService
+          ↓
+Adaptive Interview Logic
+          │
+          ├── Answer Analysis
+          ├── Difficulty Manager
+          ├── Topic Selection
+          └── Interview Memory
+          ↓
+       AIClient
+          ↓
+     MockAIClient
+          ↓
+     Prompt Template
+```
+
+## Expected Implementation
+
+Create a dedicated adaptive interview service:
+
+```text
+backend/
+└── app/
+    └── services/
+        └── adaptive_interview_service.py
+```
+
+The service should provide functionality similar to:
+
+```text
+analyze_answer()
+adjust_difficulty()
+select_next_topic()
+generate_next_question()
+```
+
+The exact implementation can be adjusted to fit the existing project architecture.
+
+## Example
+
+Candidate answers:
+
+```text
+Question 1:
+"What is a Python list?"
+
+Candidate Answer:
+"A list is a mutable collection in Python that can store multiple values."
+```
+
+The system determines:
+
+```text
+Performance: Strong
+Current Difficulty: easy
+Next Difficulty: medium
+```
+
+The next question could therefore be generated around:
+
+```text
+Python Collections
+Difficulty: medium
+```
+
+Another example:
+
+```text
+Question:
+"What is the difference between a list and a tuple?"
+
+Candidate Answer:
+"Both store values."
+```
+
+The system determines:
+
+```text
+Performance: Weak
+Current Difficulty: medium
+Next Difficulty: easy
+```
+
+The next question should therefore return to a simpler concept.
+
+## Interview Memory
+
+The adaptive system should store relevant interview state, such as:
+
+```text
+candidate_id
+current_question
+current_topic
+current_difficulty
+performance_level
+questions_answered
+```
+
+The existing `InterviewMemory` should be reused wherever possible instead of introducing unnecessary duplicate state management.
+
+## API Compatibility
+
+Existing endpoints should continue working:
+
+```text
+POST /api/interview/start
+POST /api/interview/answer
+POST /api/followup/generate
+POST /api/feedback/generate
+```
+
+If a new endpoint is required, it should follow the existing FastAPI architecture and naming conventions.
+
+## Frontend Compatibility
+
+The existing React interview interface should continue to display:
+
+* Current question
+* Question number
+* Total questions
+* Candidate answer input
+* Submit Answer
+* Ask Follow-up
+* Loading state
+* Error state
+* Interview completion
+
+The frontend does not need to expose the internal adaptive algorithm.
+
+Optionally, the UI may display:
+
+```text
+Difficulty: Medium
+Topic: Python Collections
+```
+
+to demonstrate the adaptive behavior during the hackathon presentation.
+
+## Verification
+
+Verify the following scenarios.
+
+### Scenario 1 — Strong Answer
+
+```text
+easy → strong answer → medium
+```
+
+### Scenario 2 — Partial Answer
+
+```text
+medium → partial answer → medium
+```
+
+### Scenario 3 — Weak Answer
+
+```text
+medium → weak answer → easy
+```
+
+### Scenario 4 — Maximum Difficulty
+
+```text
+hard → strong answer → hard
+```
+
+The difficulty must not exceed `hard`.
+
+### Scenario 5 — Minimum Difficulty
+
+```text
+easy → weak answer → easy
+```
+
+The difficulty must not go below `easy`.
+
+## Engineering Constraints
+
+* Do not rewrite the existing backend architecture.
+* Do not remove existing interview functionality.
+* Do not require an OpenAI API key.
+* Do not directly import an external LLM SDK into `InterviewService`.
+* Reuse the existing `AIClient`.
+* Reuse `MockAIClient`.
+* Reuse `InterviewMemory`.
+* Preserve existing REST API contracts.
+* Keep the implementation modular and testable.
+* Maintain backward compatibility with the existing React frontend.
+
+## Engineering Reason
+
+A fixed sequence of questions provides a basic interview experience, but an adaptive interview better represents a real technical interview.
+
+Dynamic difficulty adjustment allows the system to:
+
+* Challenge strong candidates.
+* Support candidates who are struggling.
+* Avoid asking unnecessarily difficult questions.
+* Personalize the interview experience.
+* Demonstrate intelligent decision-making during the hackathon presentation.
+
+The adaptive layer also creates a clear path toward future LLM-powered interview intelligence without requiring a complete rewrite of the existing system.
+
+## Future Enhancement
+
+The current MVP may use rule-based answer classification.
+
+In a future version, the same architecture can support an LLM evaluator that returns structured analysis such as:
+
+```json
+{
+  "performance": "strong",
+  "confidence": 0.87,
+  "technical_accuracy": 0.9,
+  "recommended_difficulty": "medium",
+  "recommended_topic": "Python Collections"
+}
+```
+
+This allows the AI provider to evolve independently from the interview engine.

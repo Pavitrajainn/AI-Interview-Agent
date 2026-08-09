@@ -1,14 +1,15 @@
 from app.models.feedback import FeedbackResponse
 from app.memory.interview_memory import interview_memory
-from app.ai.client import AIClient, MockAIClient
+from app.ai.llm_service import LLMService
 
 
 class FeedbackService:
 
     def __init__(self):
-
-        # Use the shared AI abstraction
-        self.ai_client: AIClient = MockAIClient()
+        # Use the centralized AI service.
+        # This supports MockAIProvider now and
+        # real LLM providers later.
+        self.llm_service = LLMService()
 
     def generate_feedback(
         self,
@@ -36,23 +37,15 @@ class FeedbackService:
                 ]
             )
 
-        # Build interview context for the AI
-        interview_context = ""
-
-        for item in answers:
-            interview_context += (
-                f"Question ID: {item['question_id']}\n"
-                f"Candidate Answer: {item['answer']}\n\n"
-            )
-
-        from app.ai.prompts import FEEDBACK_PROMPT
-
-        prompt = FEEDBACK_PROMPT.format(
-            interview_context=interview_context
-        )
+        # Build interview context for the AI provider
+        context = {
+            "answers": answers
+        }
 
         # Generate structured AI feedback
-        ai_feedback = self.ai_client.generate_feedback(prompt)
+        ai_feedback = self.llm_service.generate_feedback(
+            context
+        )
 
         return FeedbackResponse(
             candidate_id=candidate_id,
