@@ -869,3 +869,276 @@ Previously, the system could conduct the interview and generate backend feedback
 The dashboard connects interview completion with the feedback service and provides a user-facing performance report.
 
 This also creates a foundation for future improvements such as AI-generated evaluation, per-question analysis, performance charts, and personalized recommendations.
+
+
+# Prompt 16 — AI Service Layer
+
+## Goal
+
+Create a modular AI service layer for the AI Interview Agent that can later connect to an LLM provider without changing the existing interview architecture.
+
+## Context
+
+The current Interview Engine uses predefined mock questions.
+
+The project now requires an isolated AI layer so that AI-generated interview questions and future AI-based evaluation can be introduced without tightly coupling the InterviewService to a specific LLM provider.
+
+The project currently does not require an OpenAI API key.
+
+## Prompt
+
+You are a Senior AI Engineer.
+
+Design and implement a modular AI Service Layer for the AI Interview Agent.
+
+The AI layer should:
+
+1. Provide a dedicated location for AI-related functionality.
+2. Separate AI provider logic from business logic.
+3. Provide a reusable AI client interface.
+4. Provide prompt templates for interview question generation.
+5. Support a mock/fallback AI implementation so the application can run without an external API key.
+6. Keep the existing InterviewService architecture intact.
+7. Prepare the project for future LLM integration.
+
+## Expected Output
+
+Create:
+
+```text
+backend/
+└── app/
+    └── ai/
+        ├── __init__.py
+        ├── client.py
+        └── prompts.py
+```
+
+The AI layer should expose a reusable interface that can later be connected to an actual LLM provider.
+
+## Current Implementation
+
+Created an isolated AI module:
+
+```text
+backend/app/ai/
+├── __init__.py
+├── client.py
+└── prompts.py
+```
+
+### AI Client
+
+`client.py` contains the AI client abstraction and a mock implementation.
+
+The mock implementation allows the application to operate without an external LLM API key.
+
+### Prompt Templates
+
+`prompts.py` contains reusable prompt templates for future AI-generated interview questions.
+
+### Architecture
+
+```text
+Interview Service
+       │
+       ▼
+   AI Service
+       │
+       ├── Mock Provider
+       │
+       └── Future LLM Provider
+```
+
+## Engineering Reason
+
+AI provider logic should not be directly embedded inside business services.
+
+An isolated AI service layer provides:
+
+* Loose coupling
+* Easier testing
+* Provider independence
+* Reusable prompt management
+* Future LLM integration
+* Better maintainability
+
+The current mock implementation ensures that the project remains functional without requiring an external API key.
+
+## Verification
+
+The backend should start successfully after adding the AI service layer.
+
+Existing interview APIs should continue to work without modification to the InterviewService.
+
+
+# Prompt 17 — AI Question Generation Integration
+
+## Goal
+
+Integrate the AI Service Layer with the Interview Engine so that interview questions can be generated through the AI abstraction while preserving the existing interview workflow.
+
+## Context
+
+The project currently has:
+
+* A working InterviewService.
+* Five predefined interview questions.
+* Interview memory.
+* A modular AI service layer.
+* A MockAIClient that works without an external API key.
+* Prompt templates for interview question generation.
+
+The AI layer should now be connected to the Interview Engine without introducing a dependency on an external LLM provider.
+
+## Prompt
+
+You are a Senior AI Engineer.
+
+Integrate the existing AI Service Layer with the InterviewService.
+
+The implementation should:
+
+1. Use the existing `AIClient` abstraction.
+2. Use `MockAIClient` as the current provider.
+3. Generate an AI-style interview question using the existing prompt template.
+4. Keep the existing five-question interview flow functional.
+5. Avoid requiring an external API key.
+6. Keep AI provider logic separate from interview business logic.
+7. Preserve the existing InterviewService API contract.
+8. Ensure existing frontend functionality continues to work.
+
+## Expected Architecture
+
+```text
+Interview API
+     ↓
+InterviewService
+     ↓
+AIClient
+     ↓
+MockAIClient
+     ↓
+Prompt Template
+```
+
+## Expected Output
+
+The InterviewService should be able to use the AI layer to generate an interview question while maintaining compatibility with the existing `InterviewQuestion` model.
+
+The implementation should remain backward compatible with the existing interview APIs.
+
+## Engineering Constraints
+
+* Do not rewrite the backend architecture.
+* Do not remove the existing interview questions.
+* Do not require an OpenAI API key.
+* Do not directly import an external LLM SDK into InterviewService.
+* Keep the AI provider replaceable.
+* Maintain the existing REST API contracts.
+
+## Verification
+
+Verify that:
+
+```text
+POST /api/interview/start
+```
+
+continues to work.
+
+Verify that:
+
+```text
+POST /api/interview/answer
+```
+
+continues to return the next question.
+
+Verify that the backend starts successfully without an external AI API key.
+
+## Engineering Reason
+
+Separating AI generation from interview business logic makes the system provider-independent.
+
+The current MockAIClient provides a safe development environment, while the same abstraction can later support a real LLM provider without requiring major changes to the InterviewService.
+
+
+# Prompt 18 — AI Feedback Generation
+
+## Goal
+
+Integrate the AI Service Layer with the Feedback Service so that interview feedback can be generated through the reusable AI abstraction.
+
+## Context
+
+The project already has:
+
+- Interview Memory
+- Feedback Service
+- Feedback API
+- AIClient abstraction
+- MockAIClient
+- AI prompt templates
+- Structured `FeedbackResponse` model
+
+The Feedback Service previously used basic hardcoded scoring logic.
+
+The next step is to connect the Feedback Service to the AI abstraction while keeping the application functional without an external API key.
+
+## Prompt
+
+You are a Senior AI Engineer.
+
+Integrate the existing AI Service Layer with the FeedbackService.
+
+The implementation should:
+
+1. Use the existing `AIClient` abstraction.
+2. Use `MockAIClient` as the current provider.
+3. Retrieve the candidate's interview answers from InterviewMemory.
+4. Build an interview context from the candidate's questions and answers.
+5. Use a dedicated feedback prompt template.
+6. Generate structured interview feedback through the AI client.
+7. Return the generated feedback using the existing `FeedbackResponse` model.
+8. Handle candidates with no interview answers.
+9. Avoid requiring an external API key.
+10. Keep AI provider logic separate from business logic.
+11. Preserve the existing Feedback API contract.
+
+## Expected Architecture
+
+```text
+Feedback API
+     ↓
+FeedbackService
+     ↓
+Interview Memory
+     ↓
+AIClient
+     ↓
+MockAIClient
+     ↓
+Feedback Prompt
+     ↓
+Structured Feedback
+
+## Expected Output
+
+The `FeedbackService` should:
+
+- Retrieve candidate answers.
+- Construct an interview context.
+- Send the context to the AI client.
+- Receive structured feedback.
+- Map the AI response to `FeedbackResponse`.
+
+The feedback should contain:
+
+```text
+overall_score
+technical_score
+communication_score
+strengths
+weaknesses
+recommendations
