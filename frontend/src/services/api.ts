@@ -176,6 +176,16 @@ export interface FeedbackResponse {
   recommendations: string[];
 }
 
+export const getFeedback = async (
+  candidateId: string
+): Promise<FeedbackResponse> => {
+  const response = await apiClient.get<FeedbackResponse>(
+    `/api/feedback/${candidateId}`
+  );
+
+  return response.data;
+};
+
 export const generateFeedback = async (
   candidateId: string
 ): Promise<FeedbackResponse> => {
@@ -215,3 +225,4 @@ export const generateFollowUp = async (
 
   return response.data;
 };
+

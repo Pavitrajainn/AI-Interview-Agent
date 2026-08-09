@@ -12,7 +12,15 @@ class InterviewMemory:
         if candidate_id not in self._answers:
             self._answers[candidate_id] = []
 
-        self._answers[candidate_id].append({
+        answers = self._answers[candidate_id]
+
+        # Prevent duplicate answers for the same question.
+        for existing_answer in answers:
+            if existing_answer["question_id"] == question_id:
+                existing_answer["answer"] = answer
+                return
+
+        answers.append({
             "question_id": question_id,
             "answer": answer
         })
